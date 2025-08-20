@@ -2,7 +2,8 @@
 __pycache__/
 *.py[codz]
 *$py.class
-
+*.zip
+*.csv
 data/*.zip
 data/csv/*.csv
 # C extensions
