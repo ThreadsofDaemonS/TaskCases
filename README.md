@@ -98,7 +98,7 @@ source .venv/bin/activate
 
 4. **Пошук за CSV-файлом:**
 
-Помістіть .csv з case_number у папку search_input/, потім:
+Помістіть (назва файлу).csv з case_number у папку search_input/, потім:
 ```bash
    python run_search.py
 ```
