@@ -8,6 +8,7 @@ data/*.zip
 data/csv/*.csv
 # C extensions
 *.so
+*.db
 
 # Distribution / packaging
 .Python
