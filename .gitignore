@@ -8,7 +8,11 @@ data/*.zip
 data/csv/*.csv
 # C extensions
 *.so
+
+# SQLite
 *.db
+*.db-journal
+
 
 # Distribution / packaging
 .Python
