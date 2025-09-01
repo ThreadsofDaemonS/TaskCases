@@ -13,7 +13,7 @@ data/csv/*.csv
 *.db
 *.db-journal
 
-
+*.xlsx
 # Distribution / packaging
 .Python
 build/

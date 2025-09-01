@@ -1,9 +1,25 @@
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from db.database import SessionLocal, Case, Court, Stage
+from db.database import SessionLocal, Case
+import pandas as pd
 
-def search_cases(case_numbers: list[str]):
+
+def search_cases(df: pd.DataFrame):
+    if "case_number" not in df.columns:
+        print("❌ DataFrame не містить колонки 'case_number'")
+        return
+
+    # Очищення: пробіли, \n, \t
+    df["case_number"] = df["case_number"].astype(str).str.strip()
+    df["case_number"] = df["case_number"].str.replace(r"\s+", "", regex=True)
+
+    case_numbers = df["case_number"].dropna().unique().tolist()
     total = len(case_numbers)
+
+    if total == 0:
+        print("❌ Жодного коректного номера справи не знайдено")
+        return
+
     print(f"🔍 Пошук {total} справ у базі...")
 
     CHUNK_SIZE = 900
