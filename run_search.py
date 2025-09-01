@@ -5,6 +5,10 @@ from queries.case_search import search_cases
 SEARCH_DIR = Path("search_input")
 
 def read_file(path: Path) -> pd.DataFrame | None:
+    """
+    Автоматично визначає тип файлу (.csv або .xlsx) та читає його.
+    CSV: utf-8 або cp1251 (fallback). XLSX: стандартно header=0, перший рядок не пропускається.
+    """
     try:
         if path.suffix.lower() == ".csv":
             try:
@@ -12,6 +16,8 @@ def read_file(path: Path) -> pd.DataFrame | None:
             except UnicodeDecodeError:
                 return pd.read_csv(path, encoding="cp1251", on_bad_lines="skip")
         elif path.suffix.lower() == ".xlsx":
+            # ВАЖЛИВО: pd.read_excel за замовчуванням не пропускає перший рядок, він використовується як header.
+            # Якщо дані починаються з другого рядка (заголовки відсутні), можна додати header=None, але тут стандартний кейс.
             return pd.read_excel(path)
         else:
             print(f"❌ Непідтримуваний формат: {path.suffix}")
@@ -50,23 +56,24 @@ def choose_file():
         print("❌ Неможливо прочитати дані з файлу або файл порожній")
         return
 
-    # Визначимо колонку з номерами справ
+    # Визначаємо колонку з номерами справ
     case_column = None
     for col in df.columns:
         if "case" in str(col).lower() and "number" in str(col).lower():
             case_column = col
             break
 
-    # Якщо не знайшли — візьмемо першу колонку
+    # Якщо не знайшли — беремо першу колонку (для нестандартних файлів)
     if case_column is None:
         case_column = df.columns[0]
 
-    # Створимо новий DataFrame з нормалізованими номерами справ
+    # Створюємо новий DataFrame з нормалізованими номерами справ
     try:
         df = df[[case_column]].rename(columns={case_column: "case_number"})
     except Exception as e:
         print(f"❌ Не вдалося виділити колонку: {e}")
         return
+
     print(df["case_number"].tolist())
     search_cases(df)
 

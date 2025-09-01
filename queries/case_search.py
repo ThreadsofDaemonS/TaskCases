@@ -3,8 +3,11 @@ from sqlalchemy.orm import selectinload
 from db.database import SessionLocal, Case
 import pandas as pd
 
-
 def search_cases(df: pd.DataFrame):
+    # ВАЖЛИВО: Перевірка, що перший рядок .xlsx не пропущений.
+    # pd.read_excel() з header=0 не пропускає перший рядок, тому всі дані потрапляють у DataFrame.
+    # Якщо структура файлу нестандартна і дані починаються з другого рядка, слід явно передавати header=None у read_excel.
+
     if "case_number" not in df.columns:
         print("❌ DataFrame не містить колонки 'case_number'")
         return
